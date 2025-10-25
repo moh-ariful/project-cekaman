@@ -1,5 +1,5 @@
 # 🛡️ CekAman - Platform Perlindungan Digital Berbasis AI
-**Alat produktivitas berbasis AI untuk melindungi masyarakat dari penipuan digital. Deteksi pesan atau tautan mencurigakan secara otomatis hanya dalam 7 detik. Kirim pesan langsung via WhatsApp Bot untuk pemeriksaan cepat, aman, dan mudah digunakan siapa saja Anti-Penipuan Digital untuk Meningkatkan Produktivitas Masyarakat Indonesia**
+**Alat produktivitas berbasis AI untuk melindungi masyarakat dari penipuan digital. Deteksi pesan atau tautan mencurigakan secara otomatis hanya dalam 7 detik. Kirim pesan langsung via WhatsApp Bot untuk pemeriksaan cepat, aman, dan mudah digunakan siapa saja**
 
 
 ## 📋 Daftar Isi
@@ -22,11 +22,11 @@
 - [Lisensi](#-lisensi)
 - [Kontak](#-kontak)
 
----
 
 ## 🎯 Tentang CekAman
 
-**CekAman** adalah **platform perlindungan digital berbasis kecerdasan buatan (AI)** yang dirancang khusus untuk melindungi masyarakat Indonesia dari berbagai jenis penipuan online (phishing, scam, dan manipulasi data pribadi).
+**CekAman** adalah **platform perlindungan digital berbasis kecerdasan buatan (AI)** yang dirancang khusus untuk **melindungi dan meningkatkan produktivitas digital masyarakat Indonesia** dari berbagai jenis penipuan online seperti **phishing, scam, dan manipulasi data pribadi**.
+Kini, pengguna dapat langsung **mengirim pesan mencurigakan melalui WhatsApp**, dan dalam hitungan detik **bot CekAman akan membalas hasil analisis AI langsung ke pesan WhatsApp Anda** — praktis, cepat, dan mudah digunakan bahkan oleh pengguna awam teknologi.
 
 ### 🎪 Hackathon Submission
 Platform ini dikembangkan untuk **[VibeCoding Hackathon](https://vibecoding.id/hackathon)** dengan tema:

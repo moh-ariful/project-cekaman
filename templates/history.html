@@ -1,0 +1,199 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Riwayat & Statistik Penipuan - CekAman{% endblock %}
+
+{% block content %}
+<section class="max-w-6xl mx-auto py-12 fade-in px-4">
+  <h2 class="text-3xl font-bold mb-8 text-center text-red-primary">
+    📈 Dasbor Statistik Penipuan Real‑Time
+  </h2>
+
+  <!-- === HERO STATISTICS === -->
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-10">
+    <div class="bg-dark-secondary border border-dark-border rounded-xl p-6 text-center">
+      <p class="text-4xl md:text-5xl font-extrabold text-text-bright">
+        {{ total_checks|default:0 }}
+      </p>
+      <p class="text-text-gray text-sm mt-2">Pesan yang Sudah Dicek</p>
+    </div>
+
+    <div class="bg-dark-secondary border border-red-primary rounded-xl p-6 text-center glow-red">
+      <p class="text-4xl md:text-5xl font-extrabold text-red-primary">
+        {{ total_detected|default:0 }}
+      </p>
+      <p class="text-text-gray text-sm mt-2">Penipuan Terdeteksi</p>
+    </div>
+
+    <div class="bg-dark-secondary border border-dark-border rounded-xl p-6 text-center">
+      <p class="text-4xl md:text-5xl font-extrabold text-yellow-400">
+        {{ fraud_percentage|default:0 }}%
+      </p>
+      <p class="text-text-gray text-sm mt-2">Dari Total Pengecekan</p>
+    </div>
+
+    <div class="bg-dark-secondary border border-dark-border rounded-xl p-6 text-center">
+      <p class="text-4xl md:text-5xl font-extrabold text-green-400">
+        {{ estimated_saved|default:0 }}+
+      </p>
+      <p class="text-text-gray text-sm mt-2">Orang Terlindungi</p>
+    </div>
+  </div>
+
+  <!-- === CHART WRAPPER === -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-12">
+    <!-- Grafik Tren Per Hari -->
+    <div class="bg-dark-secondary border border-dark-border rounded-xl p-6">
+      <h3 class="text-lg font-semibold mb-4 text-center text-text-bright">
+        Tren Penipuan per Hari (7 Hari Terakhir)
+      </h3>
+      <canvas id="trendChart" height="200"></canvas>
+    </div>
+
+    <!-- Grafik Kategori Terpopuler -->
+    <div class="bg-dark-secondary border border-dark-border rounded-xl p-6">
+      <h3 class="text-lg font-semibold mb-4 text-center text-text-bright">
+        Kategori Penipuan Terpopuler
+      </h3>
+      <canvas id="categoryChart" height="200"></canvas>
+    </div>
+  </div>
+
+  <!-- === TOP 10 SITUS PENIPUAN === -->
+  <div class="bg-dark-secondary border border-dark-border rounded-xl p-6 mb-12">
+    <h3 class="text-lg font-semibold mb-4 text-center text-text-bright">
+      🔥 10 Situs Penipuan Paling Sering Dilaporkan
+    </h3>
+    {% if top_sites %}
+    <div class="overflow-x-auto">
+      <table class="min-w-full border-collapse">
+        <thead>
+          <tr class="bg-dark-border border-b">
+            <th class="text-left p-3 text-gray-300 font-semibold">#</th>
+            <th class="text-left p-3 text-gray-300 font-semibold">Website</th>
+            <th class="text-left p-3 text-gray-300 font-semibold">Jumlah Laporan</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for site in top_sites %}
+          <tr class="border-b border-dark-border hover:bg-dark-bg transition duration-200">
+            <td class="p-3 text-gray-400">{{ forloop.counter }}</td>
+            <td class="p-3 break-all text-gray-200">{{ site.url }}</td>
+            <td class="p-3 text-red-primary font-semibold">{{ site.count }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+      <p class="text-center text-gray-400">Belum ada data situs penipuan.</p>
+    {% endif %}
+  </div>
+
+  <!-- === TABEL HISTORI LAMA === -->
+  <h2 class="text-2xl font-bold mb-6 text-center text-red-primary">🕓 Riwayat Pengecekan Terbaru</h2>
+  {% if history %}
+    <div class="overflow-x-auto bg-dark-secondary rounded-lg shadow-lg">
+      <table class="min-w-full border-collapse">
+        <thead>
+          <tr class="bg-dark-border border-b">
+            <th class="text-left p-3 text-gray-300 font-semibold">Tanggal</th>
+            <th class="text-left p-3 text-gray-300 font-semibold">URL</th>
+            <th class="text-left p-3 text-gray-300 font-semibold">Status</th>
+            <th class="text-left p-3 text-gray-300 font-semibold">Skor Risiko</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for h in history %}
+          <tr class="border-b border-dark-border hover:bg-dark-bg transition duration-200">
+            <td class="p-3 text-sm text-gray-400">{{ h.checked_at|date:"d/m/Y H:i" }}</td>
+            <td class="p-3 break-all text-gray-200 max-w-[250px] truncate">{{ h.url }}</td>
+            <td class="p-3">
+              {% if h.result_status == 'dangerous' %}
+                <span class="text-red-500 font-bold">BERBAHAYA</span>
+              {% elif h.result_status == 'suspicious' %}
+                <span class="text-yellow-400 font-semibold">MENCURIGAKAN</span>
+              {% elif h.result_status == 'safe' %}
+                <span class="text-green-400 font-semibold">AMAN</span>
+              {% else %}
+                <span class="text-gray-400">{{ h.result_status }}</span>
+              {% endif %}
+            </td>
+            <td class="p-3 text-gray-300">{{ h.risk_score }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <p class="text-center text-gray-400 mt-6">Belum ada riwayat pengecekan.</p>
+  {% endif %}
+
+  <div class="text-center mt-8">
+    <a href="{% url 'home' %}" class="bg-red-primary hover:bg-red-dark px-5 py-3 rounded-lg font-medium glow-red">
+      🔙 Kembali ke Beranda
+    </a>
+  </div>
+</section>
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  // --- Trend Chart ---
+  const trendCtx = document.getElementById('trendChart').getContext('2d');
+  new Chart(trendCtx, {
+    type: 'line',
+    data: {
+      labels: {{ trend_labels|safe }},
+      datasets: [{
+        label: 'Penipuan / Hari',
+        data: {{ trend_values|safe }},
+        borderColor: '#ef4444',
+        backgroundColor: 'rgba(239,68,68,0.2)',
+        tension: 0.3,
+        fill: true,
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+      },
+      scales: {
+        x: {
+          ticks: { color: '#f5f5f5' },
+          grid: { color: '#2a2a2a' },
+        },
+        y: {
+          ticks: { color: '#f5f5f5' },
+          grid: { color: '#2a2a2a' },
+        }
+      }
+    }
+  });
+
+  // --- Category Chart ---
+  const catCtx = document.getElementById('categoryChart').getContext('2d');
+  new Chart(catCtx, {
+    type: 'pie',
+    data: {
+      labels: {{ category_labels|safe }},
+      datasets: [{
+        data: {{ category_values|safe }},
+        backgroundColor: [
+          '#ef4444', '#f97316', '#eab308', '#22c55e', '#3b82f6', '#8b5cf6'
+        ],
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          labels: { color: '#f5f5f5' },
+          position: 'bottom',
+        }
+      }
+    }
+  });
+</script>
+{% endblock %}
+{% endblock %}

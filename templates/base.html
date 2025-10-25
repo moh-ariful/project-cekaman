@@ -1,0 +1,372 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}" />
+    <meta name="description" content="CekAman - Platform AI untuk melindungi masyarakat Indonesia dari penipuan digital">
+    <meta name="keywords" content="cek penipuan, anti scam, keamanan digital, Indonesia">
+    <meta name="author" content="CekAman Team">
+    
+    <title>{% block title %}CekAman - Perlindungan dari Penipuan Digital{% endblock %}</title>
+    
+    <link rel="icon" type="image/png" href="{% static 'favicon.ico' %}">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'dark-bg': '#0a0a0a',
+                        'dark-secondary': '#1a1a1a',
+                        'dark-border': '#2a2a2a',
+                        'red-primary': '#ef4444',
+                        'red-secondary': '#dc2626',
+                        'red-dark': '#b91c1c',
+                        'text-bright': '#f5f5f5',
+                        'text-gray': '#a3a3a3',
+                    },
+                    fontFamily: {
+                        'sans': ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        body {
+            background-color: #0a0a0a;
+            color: #f5f5f5;
+        }
+        
+        /* --- TAMBAHKAN STYLE DI BAWAH INI --- */
+        /* Style untuk menyembunyikan Honeypot dari manusia */
+        .honeypot-field {
+            position: absolute;
+            left: -9999px;
+            top: -9999px;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+            opacity: 0;
+        }
+        /* --- AKHIR TAMBAHAN STYLE --- */
+        
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #1a1a1a;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #ef4444;
+            border-radius: 5px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #dc2626;
+        }
+        
+        /* Glow effect untuk elemen merah */
+        .glow-red {
+            box-shadow: 0 0 20px rgba(239, 68, 68, 0.5);
+        }
+        
+        .glow-red:hover {
+            box-shadow: 0 0 30px rgba(239, 68, 68, 0.7);
+        }
+        
+        /* Animasi fade in */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Mobile menu animation */
+        .mobile-menu {
+            transition: all 0.3s ease-in-out;
+        }
+        
+        /* Button hover effect */
+        .btn-primary {
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+        }
+    </style>
+    
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body class="bg-dark-bg text-text-bright min-h-screen flex flex-col">
+    
+    <nav class="bg-dark-secondary border-b border-dark-border sticky top-0 z-50 backdrop-blur-lg bg-opacity-90">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-red-primary to-red-dark rounded-lg flex items-center justify-center glow-red">
+                        <i class="fas fa-shield-halved text-white text-xl"></i>
+                    </div>
+                    <a href="{% url 'home' %}" class="text-2xl font-bold">
+                        <span class="text-text-bright">Cek</span><span class="text-red-primary">Aman</span>
+                    </a>
+                </div>
+                
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="{% url 'home' %}" class="text-text-bright hover:text-red-primary transition-colors duration-300 font-medium">
+                        <i class="fas fa-home mr-2"></i>Beranda
+                    </a>
+
+                    <a href="{% url 'history' %}" class="text-text-bright hover:text-red-primary transition-colors duration-300 font-medium">
+                        <i class="fas fa-clock-rotate-left mr-2"></i>Dashbor
+                    </a>
+                    <a href="{% url 'education' %}" class="text-text-bright hover:text-red-primary transition-colors duration-300 font-medium">
+                        <i class="fas fa-graduation-cap mr-2"></i>Edukasi
+                    </a>
+                    <a href="{% url 'about' %}" class="text-text-bright hover:text-red-primary transition-colors duration-300 font-medium">
+                        <i class="fas fa-circle-info mr-2"></i>Tentang
+                    </a>
+                </div>
+                
+                <div class="hidden md:block">
+                    <a href="{% url 'check' %}" class="bg-red-primary hover:bg-red-secondary text-white px-6 py-2.5 rounded-lg font-semibold btn-primary glow-red">
+                        <i class="fas fa-shield-check mr-2"></i>Cek Link Sekarang
+                    </a>
+                </div>
+                
+                <button id="mobile-menu-button" class="md:hidden text-text-bright hover:text-red-primary focus:outline-none">
+                    <i class="fas fa-bars text-2xl"></i>
+                </button>
+            </div>
+        </div>
+        
+        <div id="mobile-menu" class="hidden md:hidden bg-dark-secondary border-t border-dark-border mobile-menu">
+            <div class="px-4 py-4 space-y-3">
+                <a href="{% url 'home' %}" class="block text-text-bright hover:text-red-primary hover:bg-dark-bg px-4 py-3 rounded-lg transition-all duration-300">
+                    <i class="fas fa-home mr-3"></i>Beranda
+                </a>
+
+                <a href="{% url 'history' %}" class="block text-text-bright hover:text-red-primary hover:bg-dark-bg px-4 py-3 rounded-lg transition-all duration-300">
+                    <i class="fas fa-clock-rotate-left mr-3"></i>Dashbor
+                </a>
+                <a href="{% url 'education' %}" class="block text-text-bright hover:text-red-primary hover:bg-dark-bg px-4 py-3 rounded-lg transition-all duration-300">
+                    <i class="fas fa-graduation-cap mr-3"></i>Edukasi
+                </a>
+                <a href="{% url 'about' %}" class="block text-text-bright hover:text-red-primary hover:bg-dark-bg px-4 py-3 rounded-lg transition-all duration-300">
+                    <i class="fas fa-circle-info mr-3"></i>Tentang
+                </a>
+                <a href="{% url 'check' %}" class="block bg-red-primary hover:bg-red-secondary text-white px-4 py-3 rounded-lg font-semibold text-center glow-red">
+                    <i class="fas fa-shield-check mr-2"></i>Cek Link Sekarang
+                </a>
+            </div>
+        </div>
+    </nav>
+    
+    <main class="flex-grow">
+        {% block content %}
+        {% endblock %}
+    </main>
+    
+    <footer class="bg-dark-secondary border-t border-dark-border mt-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                
+                <div class="md:col-span-2">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <div class="w-12 h-12 bg-gradient-to-br from-red-primary to-red-dark rounded-lg flex items-center justify-center glow-red">
+                            <i class="fas fa-shield-halved text-white text-2xl"></i>
+                        </div>
+                        <span class="text-2xl font-bold">
+                            <span class="text-text-bright">Cek</span><span class="text-red-primary">Aman</span>
+                        </span>
+                    </div>
+                    <p class="text-text-gray text-sm leading-relaxed mb-4">
+                        Platform perlindungan digital berbasis AI yang membantu masyarakat Indonesia terhindar dari penipuan online.
+                        Cek link, pesan, dan website mencurigakan dalam hitungan detik.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="w-10 h-10 bg-dark-bg hover:bg-red-primary rounded-lg flex items-center justify-center transition-all duration-300 glow-red">
+                            <i class="fab fa-facebook-f text-text-bright"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-dark-bg hover:bg-red-primary rounded-lg flex items-center justify-center transition-all duration-300 glow-red">
+                            <i class="fab fa-twitter text-text-bright"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-dark-bg hover:bg-red-primary rounded-lg flex items-center justify-center transition-all duration-300 glow-red">
+                            <i class="fab fa-instagram text-text-bright"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-dark-bg hover:bg-red-primary rounded-lg flex items-center justify-center transition-all duration-300 glow-red">
+                            <i class="fab fa-whatsapp text-text-bright"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold mb-4 text-red-primary">Menu Cepat</h3>
+                    <ul class="space-y-2">
+                        <li>
+                            <a href="{% url 'home' %}" class="text-text-gray hover:text-red-primary transition-colors duration-300">
+                                <i class="fas fa-angle-right mr-2"></i>Beranda
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="{% url 'history' %}" class="text-text-gray hover:text-red-primary transition-colors duration-300">
+                                <i class="fas fa-angle-right mr-2"></i>Dashbor
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{% url 'education' %}" class="text-text-gray hover:text-red-primary transition-colors duration-300">
+                                <i class="fas fa-angle-right mr-2"></i>Edukasi
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{% url 'about' %}" class="text-text-gray hover:text-red-primary transition-colors duration-300">
+                                <i class="fas fa-angle-right mr-2"></i>Tentang Kami
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold mb-4 text-red-primary">Kontak Darurat</h3>
+                    <ul class="space-y-3">
+                        <li class="flex items-start">
+                            <i class="fas fa-phone text-red-primary mt-1 mr-3"></i>
+                            <div>
+                                <p class="text-text-gray text-sm">Polisi</p>
+                                <p class="text-text-bright font-semibold">110</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-phone text-red-primary mt-1 mr-3"></i>
+                            <div>
+                                <p class="text-text-gray text-sm">Anti-Trafficking</p>
+                                <p class="text-text-bright font-semibold">1500-009</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-envelope text-red-primary mt-1 mr-3"></i>
+                            <div>
+                                <p class="text-text-gray text-sm">Email</p>
+                                <p class="text-text-bright font-semibold">info@cekaman.id</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-dark-border mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-text-gray text-sm mb-4 md:mb-0">
+                    &copy; 2025 <span class="text-red-primary font-semibold">CekAman</span>.
+                    Dibuat dengan <i class="fas fa-heart text-red-primary"></i> untuk Indonesia.
+                </p>
+                <div class="flex space-x-6 text-sm">
+                    <a href="#" class="text-text-gray hover:text-red-primary transition-colors duration-300">Kebijakan Privasi</a>
+                    <a href="#" class="text-text-gray hover:text-red-primary transition-colors duration-300">Syarat & Ketentuan</a>
+                    <a href="#" class="text-text-gray hover:text-red-primary transition-colors duration-300">FAQ</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <button id="back-to-top" class="fixed bottom-8 right-8 bg-red-primary hover:bg-red-secondary text-white w-12 h-12 rounded-full shadow-lg hidden items-center justify-center glow-red transition-all duration-300 z-40">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+    
+    <script>
+        // Mobile Menu Toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileMenuIcon = mobileMenuButton.querySelector('i');
+        
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+            
+            // Toggle icon
+            if (mobileMenu.classList.contains('hidden')) {
+                mobileMenuIcon.classList.remove('fa-times');
+                mobileMenuIcon.classList.add('fa-bars');
+            } else {
+                mobileMenuIcon.classList.remove('fa-bars');
+                mobileMenuIcon.classList.add('fa-times');
+            }
+        });
+        
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!mobileMenuButton.contains(e.target) && !mobileMenu.contains(e.target)) {
+                mobileMenu.classList.add('hidden');
+                mobileMenuIcon.classList.remove('fa-times');
+                mobileMenuIcon.classList.add('fa-bars');
+            }
+        });
+        
+        // Back to Top Button
+        const backToTopButton = document.getElementById('back-to-top');
+        
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 300) {
+                backToTopButton.classList.remove('hidden');
+                backToTopButton.classList.add('flex');
+            } else {
+                backToTopButton.classList.add('hidden');
+                backToTopButton.classList.remove('flex');
+            }
+        });
+        
+        backToTopButton.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+        
+        // Active menu highlighting
+        const currentPath = window.location.pathname;
+        const menuLinks = document.querySelectorAll('nav a');
+        
+        menuLinks.forEach(link => {
+            if (link.getAttribute('href') === currentPath) {
+                link.classList.add('text-red-primary');
+            }
+        });
+    </script>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

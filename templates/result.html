@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Hasil Analisis - CekAman{% endblock %}
+{% block content %}
+<section class="max-w-3xl mx-auto py-12 fade-in px-4">
+  <h2 class="text-2xl font-bold mb-6 text-red-primary text-center md:text-left">
+    Hasil Analisis 🔎
+  </h2>
+
+  <div
+    class="bg-dark-secondary p-6 md:p-8 rounded-lg border border-dark-border shadow-lg"
+  >
+    <div class="space-y-3 break-words">
+      <p class="text-text-gray">
+        URL Dicek:
+        <span class="text-text-bright font-medium">{{ url|default:"Tidak ada" }}</span>
+      </p>
+
+      {% if result.status == 'dangerous' %}
+      <p class="text-text-gray">
+        Status:
+        <span
+          class="text-red-primary font-bold text-lg px-2 py-1 bg-red-900 bg-opacity-50 rounded-md"
+          >🚨 {{ result.status|upper }}</span
+        >
+      </p>
+      {% elif result.status == 'suspicious' %}
+      <p class="text-text-gray">
+        Status:
+        <span
+          class="text-yellow-400 font-bold text-lg px-2 py-1 bg-yellow-900 bg-opacity-50 rounded-md"
+          >⚠️ {{ result.status|upper }}</span
+        >
+      </p>
+      {% elif result.status == 'safe' %}
+      <p class="text-text-gray">
+        Status:
+        <span
+          class="text-green-400 font-bold text-lg px-2 py-1 bg-green-900 bg-opacity-50 rounded-md"
+          >✅ {{ result.status|upper }}</span
+        >
+      </p>
+      {% else %}
+      <p class="text-text-gray">
+        Status:
+        <span
+          class="text-text-gray font-bold text-lg px-2 py-1 bg-dark-bg rounded-md"
+          >❌ {{ result.status|upper }}</span
+        >
+      </p>
+      {% endif %}
+
+      <p class="text-text-gray">
+        Skor Risiko:
+        <span class="text-text-bright font-bold text-lg"
+          >{{ result.risk_score|default:"N/A" }} / 100</span
+        >
+      </p>
+    </div>
+
+    <hr class="border-dark-border my-6" />
+
+    <div>
+      <h3 class="mt-5 text-xl font-semibold text-text-bright mb-3">
+        Alasan:
+      </h3>
+      <ul class="list-disc list-outside ml-5 space-y-2 text-text-gray">
+        {% for reason in result.reasons %}
+        <li>{{ reason }}</li>
+        {% empty %}
+        <li>Tidak ada alasan spesifik ditemukan.</li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    {% if result.warning %}
+    <div
+      class="mt-6 bg-red-900 bg-opacity-70 text-red-100 p-4 rounded-lg border border-red-700 flex items-start space-x-3"
+    >
+      <i class="fas fa-triangle-exclamation text-xl mt-1"></i>
+      <p class="font-medium">{{ result.warning }}</p>
+    </div>
+    {% endif %}
+
+    <div class="pt-8 text-center">
+      <a
+        href="{% url 'home' %}"
+        class="bg-red-primary hover:bg-red-secondary text-white font-semibold px-8 py-3 rounded-lg glow-red transition-all duration-300"
+      >
+        <i class="fas fa-rotate-right mr-2"></i> Cek Lagi
+      </a>
+    </div>
+  </div>
+  </section>
+{% endblock %}

@@ -1,0 +1,258 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}CekAman - Meningkatkan Produktivitas Digital Berbasis AI{% endblock %}
+
+{% block content %}
+<section class="max-w-4xl mx-auto py-16 px-6 fade-in text-center">
+  
+  <!-- BADGE HACKATHON -->
+  <div class="inline-flex items-center gap-2 bg-gradient-to-r from-red-primary/20 to-red-secondary/20 border border-red-primary/30 rounded-full px-4 py-2 mb-6">
+    <i class="fas fa-trophy text-red-primary"></i>
+    <span class="text-sm font-semibold text-text-bright">Participant of VibeCoding.id Hackathon 2025</span>
+  </div>
+
+  <h1 class="text-4xl md:text-5xl font-extrabold mb-6">
+    <span class="text-text-bright">Tingkatkan Produktivitas,</span>
+    <span class="text-red-primary">Hindari Penipuan 💡</span>
+  </h1>
+  
+  <p class="text-text-gray max-w-2xl mx-auto leading-relaxed mb-10">
+    Di era digital yang cepat, waktu adalah aset paling berharga.
+    <span class="text-red-primary font-semibold">CekAman</span> hadir sebagai
+    <span class="text-text-bright font-medium">asisten AI</span> untuk membantu Anda
+    <span class="text-red-primary font-semibold">meningkatkan produktivitas</span>,
+    memverifikasi pesan, dan menghindari penipuan hanya dalam
+    <span class="text-red-primary font-semibold">7 detik!</span>
+  </p>
+
+  <div class="bg-dark-secondary border border-dark-border rounded-xl p-6 mb-10">
+    <p class="text-text-gray text-sm md:text-base leading-relaxed mb-4">
+      Cukup <span class="text-text-bright font-semibold">copy–paste</span>
+      seluruh isi pesan mencurigakan (SMS, WhatsApp, atau email) ke kolom di bawah ini.
+      AI kami akan bekerja otomatis — menganalisis link, konten, dan pola bahasa
+      untuk memastikan keamanan Anda.
+    </p>
+    <p class="text-text-gray text-sm">
+      🚀 Hemat waktu, tetap produktif, dan aman dalam satu langkah.
+    </p>
+  </div>
+
+  <!-- FORM PENGECEKAN -->
+  <form id="cekaman-form" method="POST" action="{% url 'check' %}" class="space-y-6 text-left max-w-2xl mx-auto relative">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+
+    <div>
+      {{ form.message.label_tag }}
+      {{ form.message }}
+      {% if form.message.errors %}
+        <p class="text-red-primary text-sm mt-1">{{ form.message.errors|first }}</p>
+      {% endif %}
+    </div>
+
+    <div>
+      {{ form.category.label_tag }}
+      {{ form.category }}
+      {% if form.category.errors %}
+        <p class="text-red-primary text-sm mt-1">{{ form.category.errors|first }}</p>
+      {% endif %}
+    </div>
+
+    <div>
+      <label for="{{ form.math_check.id_for_label }}">
+        {{ form.math_check.label }} (Berapa {{ num1 }} + {{ num2 }}?)
+      </label>
+      {{ form.math_check }}
+      {% if form.math_check.errors %}
+        <p class="text-red-primary text-sm mt-1">{{ form.math_check.errors|first }}</p>
+      {% endif %}
+    </div>
+
+    <!-- HONEYPOT FIELD (HIDDEN) -->
+    <div class="honeypot-field">
+      {{ form.verification_email.label_tag }}
+      {{ form.verification_email }}
+    </div>
+
+    <div class="pt-6 text-center">
+      <button
+        id="submit-btn"
+        type="submit"
+        class="bg-red-primary hover:bg-red-secondary text-white font-semibold px-8 py-3 rounded-lg glow-red transition-all duration-300 flex items-center justify-center mx-auto"
+      >
+        🤖 <span id="btn-text" class="ml-2">Analisis dengan AI Sekarang</span>
+      </button>
+    </div>
+
+    <!-- LOADING OVERLAY -->
+    <div
+      id="loading-overlay"
+      class="hidden absolute inset-0 bg-dark-bg bg-opacity-70 flex flex-col items-center justify-center rounded-xl"
+    >
+      <div
+        class="w-12 h-12 border-4 border-red-primary border-t-transparent rounded-full animate-spin mb-4"
+      ></div>
+      <p class="text-text-gray">Sedang menganalisis pesan Anda...</p>
+    </div>
+  </form>
+
+  <!-- SECTION: 4 LAPIS TEKNOLOGI AI -->
+  <div class="mt-16 bg-dark-secondary border border-dark-border rounded-xl p-8">
+    <h2 class="text-2xl font-bold text-red-primary mb-2">⚡ Produktivitas Berbasis AI</h2>
+    <p class="text-text-gray text-sm mb-6">
+      CekAman menggunakan <span class="text-text-bright font-semibold">empat lapis teknologi AI & machine learning</span> 
+      untuk mengotomatiskan proses verifikasi yang biasanya memakan waktu berjam-jam, menjadi hanya 
+      <span class="text-red-primary font-semibold">7 detik</span>.
+    </p>
+
+    <!-- 4 CARDS TEKNOLOGI -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+      
+      <!-- Card 1: Google Safe Browsing -->
+      <div class="bg-dark-bg border border-dark-border rounded-lg p-4 hover:border-red-primary/50 transition-all duration-300">
+        <div class="flex items-center gap-3 mb-2">
+          <div class="w-10 h-10 bg-red-primary/20 rounded-lg flex items-center justify-center">
+            <i class="fas fa-shield-check text-red-primary text-lg"></i>
+          </div>
+          <h3 class="text-text-bright font-semibold">Google Safe Browsing API</h3>
+        </div>
+        <p class="text-text-gray text-sm leading-relaxed">
+          Deteksi otomatis link berbahaya dari database global Google yang melindungi 
+          <span class="text-text-bright font-medium">5+ miliar perangkat</span> di seluruh dunia.
+        </p>
+      </div>
+
+      <!-- Card 2: AI GPT-4 -->
+      <div class="bg-dark-bg border border-dark-border rounded-lg p-4 hover:border-red-primary/50 transition-all duration-300">
+        <div class="flex items-center gap-3 mb-2">
+          <div class="w-10 h-10 bg-red-primary/20 rounded-lg flex items-center justify-center">
+            <i class="fas fa-brain text-red-primary text-lg"></i>
+          </div>
+          <h3 class="text-text-bright font-semibold">AI Contextual Analysis (GPT-4)</h3>
+        </div>
+        <p class="text-text-gray text-sm leading-relaxed">
+          <span class="text-red-primary font-semibold">OpenAI GPT-4</span> menganalisis konteks pesan, 
+          pola bahasa manipulatif, urgensi palsu, dan iming-iming mencurigakan secara <span class="text-text-bright font-medium">real-time</span>.
+        </p>
+      </div>
+
+      <!-- Card 3: Domain Analysis -->
+      <div class="bg-dark-bg border border-dark-border rounded-lg p-4 hover:border-red-primary/50 transition-all duration-300">
+        <div class="flex items-center gap-3 mb-2">
+          <div class="w-10 h-10 bg-red-primary/20 rounded-lg flex items-center justify-center">
+            <i class="fas fa-globe text-red-primary text-lg"></i>
+          </div>
+          <h3 class="text-text-bright font-semibold">Domain Analysis (WHOIS)</h3>
+        </div>
+        <p class="text-text-gray text-sm leading-relaxed">
+          Memeriksa umur domain, tanggal pembuatan, dan registrar untuk mendeteksi 
+          <span class="text-text-bright font-medium">website baru yang mencurigakan</span> (dibuat <7 hari).
+        </p>
+      </div>
+
+      <!-- Card 4: Web Scraping -->
+      <div class="bg-dark-bg border border-dark-border rounded-lg p-4 hover:border-red-primary/50 transition-all duration-300">
+        <div class="flex items-center gap-3 mb-2">
+          <div class="w-10 h-10 bg-red-primary/20 rounded-lg flex items-center justify-center">
+            <i class="fas fa-magnifying-glass-chart text-red-primary text-lg"></i>
+          </div>
+          <h3 class="text-text-bright font-semibold">Website Scraping & Input Detection</h3>
+        </div>
+        <p class="text-text-gray text-sm leading-relaxed">
+          Analisis otomatis konten website mencurigakan dan deteksi form berbahaya yang meminta 
+          <span class="text-text-bright font-medium">PIN, CVV, NIK, atau data sensitif</span>.
+        </p>
+      </div>
+
+    </div>
+
+    <p class="text-text-gray text-sm leading-relaxed">
+      Setiap detik yang Anda hemat adalah waktu produktif yang bisa digunakan untuk
+      hal yang benar-benar penting — <span class="text-text-bright font-semibold">belajar, bekerja, dan berkarya</span>.
+      Platform ini dibangun dengan <span class="text-red-primary font-semibold">Python Django 5.0</span>, 
+      <span class="text-red-primary font-semibold">OpenAI GPT-4o-mini</span>, dan 
+      <span class="text-red-primary font-semibold">Google Safe Browsing API</span>.
+    </p>
+  </div>
+
+  <!-- SECTION: WHATSAPP INTEGRATION -->
+  <div class="mt-12 bg-gradient-to-br from-green-500/10 to-green-600/10 border border-green-500/30 rounded-xl p-8">
+    <div class="flex items-center justify-center gap-3 mb-4">
+      <div class="w-12 h-12 bg-green-500/20 rounded-full flex items-center justify-center">
+        <i class="fab fa-whatsapp text-green-500 text-2xl"></i>
+      </div>
+      <h2 class="text-2xl font-bold text-text-bright">Akses via WhatsApp!</h2>
+    </div>
+    
+    <p class="text-text-gray text-center leading-relaxed mb-6 max-w-2xl mx-auto">
+      Tidak perlu buka website! CekAman juga bisa diakses melalui 
+      <span class="text-text-bright font-semibold">WhatsApp Bot</span> — 
+      solusi <span class="text-green-500 font-semibold">simple & ampuh</span> untuk 
+      <span class="text-text-bright font-medium">ibu rumah tangga, lansia, dan pengguna yang kurang familiar dengan teknologi</span>.
+    </p>
+
+    <div class="bg-dark-bg/50 border border-green-500/20 rounded-lg p-6 max-w-xl mx-auto mb-6">
+      <h3 class="text-text-bright font-semibold mb-3 flex items-center gap-2">
+        <i class="fas fa-lightbulb text-green-500"></i>
+        Cara Mudah Menggunakan WhatsApp Bot:
+      </h3>
+      <ol class="text-text-gray text-sm space-y-2 list-decimal list-inside">
+        <li>Simpan nomor WhatsApp CekAman: <span class="text-green-500 font-bold">0812-4660-2290</span></li>
+        <li>Kirim pesan mencurigakan (SMS/chat/email) langsung ke nomor tersebut</li>
+        <li>Tunggu <span class="text-text-bright font-semibold">5-10 detik</span>, bot akan kirim hasil analisis otomatis</li>
+        <li>Baca rekomendasi dan lindungi diri dari penipuan digital! 🛡️</li>
+      </ol>
+    </div>
+
+    <div class="text-center">
+      <a 
+        href="https://wa.me/6281246602290?text=Halo%20CekAman,%20saya%20ingin%20cek%20pesan%20ini:" 
+        target="_blank"
+        class="inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white font-semibold px-6 py-3 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg"
+      >
+        <i class="fab fa-whatsapp text-xl"></i>
+        <span class="hidden sm:inline">Chat via WhatsApp: 0812-4660-2290</span>
+        <span class="sm:hidden">Chat: 0812-4660-2290</span>
+      </a>
+    </div>
+
+    <p class="text-text-gray text-xs text-center mt-4">
+      💡 <span class="text-text-bright font-medium">Edukasi digital yang inklusif</span> — 
+      tidak ada yang tertinggal dalam perlindungan dari penipuan online!
+    </p>
+  </div>
+
+  <!-- CTA EDUKASI -->
+  <div class="mt-12 text-center">
+    <a
+      href="{% url 'education' %}"
+      class="inline-block bg-red-primary hover:bg-red-secondary text-white px-8 py-4 rounded-lg font-semibold text-lg glow-red transition-all duration-300 transform hover:scale-105"
+    >
+      <i class="fas fa-graduation-cap mr-2"></i>Pelajari Tips & Cara Kerja AI CekAman
+    </a>
+  </div>
+
+</section>
+
+{% block extra_js %}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const form = document.getElementById("cekaman-form");
+  const overlay = document.getElementById("loading-overlay");
+  const submitBtn = document.getElementById("submit-btn");
+  const btnText = document.getElementById("btn-text");
+
+  form.addEventListener("submit", function () {
+    // Tampil overlay loading
+    overlay.classList.remove("hidden");
+    overlay.classList.add("flex");
+
+    // Disable tombol agar tidak bisa ditekan berkali-kali
+    submitBtn.disabled = true;
+    submitBtn.classList.add("opacity-70", "cursor-not-allowed");
+    btnText.textContent = "Sedang diproses...";
+  });
+});
+</script>
+{% endblock %}
+{% endblock %}

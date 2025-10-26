@@ -178,8 +178,9 @@ Platform ini dikembangkan untuk **[VibeCoding Hackathon](https://vibecoding.id/h
 ### Anti-Spam & Security
 - **Honeypot Technique** - Hidden field untuk menangkap bot
 - **Math Captcha** - Pertanyaan matematika sederhana (anti-bot)
-- **Bleach** - Sanitasi input untuk mencegah XSS/injection attacks
+- **Bleach** - Sanitasi input user secara menyeluruh untuk mencegah XSS/injection attacks
 - **Validators** - Validasi URL format
+- **Django ORM** - Menghindari SQL Injection melalui query otomatis aman
 
 ### Messaging Integration
 - **Fonnte API** - WhatsApp Business API Gateway

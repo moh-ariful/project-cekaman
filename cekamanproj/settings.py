@@ -11,10 +11,20 @@ DEBUG = os.getenv("DEBUG", "False") == "True"
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 GOOGLE_SAFE_BROWSING_KEY = os.getenv("GOOGLE_SAFE_BROWSING_KEY")
 FONNTE_TOKEN = os.getenv("FONNTE_TOKEN")
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+# ========================================
+# 🌐 DOMAIN SECURITY CONFIGURATION
+# ========================================
+ALLOWED_HOSTS = [
+    "cekaman.ddns.net",  # production domain
+    "www.cekaman.ddns.net",  # optional subdomain
+    "localhost",  # for local development
+    "127.0.0.1",  # for dev/testing
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://cekaman.ddns.net"  # trusted for secure POST requests
+]
 
 
 # Application definition
@@ -94,7 +104,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Jakarta'
 
 USE_I18N = True
 
@@ -118,3 +128,16 @@ MEDIA_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# ==============================
+# 🔒 TAMBAHAN KEAMANAN PRODUKSI
+# ==============================
+
+SECURE_BROWSER_XSS_FILTER = True  # Aktifkan proteksi XSS di browser
+SECURE_CONTENT_TYPE_NOSNIFF = True  # Cegah penebakan MIME type
+X_FRAME_OPTIONS = "DENY"  # Cegah clickjacking
+
+# Hanya aktif di mode production
+SECURE_SSL_REDIRECT = not DEBUG
+SESSION_COOKIE_SECURE = not DEBUG
+CSRF_COOKIE_SECURE = not DEBUG

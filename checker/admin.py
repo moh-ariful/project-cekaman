@@ -55,3 +55,8 @@ class ScanHistoryAdmin(admin.ModelAdmin):
     
     # Mengurutkan default berdasarkan tanggal pengecekan (terbaru dulu)
     ordering = ('-checked_at',)
+    
+    # Ekstra Visibilitas & navigasi ---
+    list_display_links = ('url', 'result_status')  # dua kolom bisa diklik ke detail
+    date_hierarchy = 'checked_at'                   # navigasi berdasarkan tanggal
+    list_per_page = 25                              # pagination agar load cepat

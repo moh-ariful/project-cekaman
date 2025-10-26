@@ -30,38 +30,57 @@ def home(request):
 
 
 def check_view(request):
-    """Menangani submit form pengecekan dari user."""
+    """Menangani submit form pengecekan dari user dengan rate limit sederhana."""
     url = None  # Inisialisasi URL
-    
+
     if request.method == "POST":
+        # === RATE LIMIT SESSION (maks 1x per 10 detik) ===
+        import time
+        ip = get_client_ip(request) or "unknown"
+        now = time.time()
+        cooldown = 10  # jeda minimal 10 detik
+
+        last_check_time = request.session.get("last_check_time")
+        if last_check_time and now - last_check_time < cooldown:
+            wait = cooldown - (now - last_check_time)
+            # langsung render halaman error bawaan untuk rate-limit
+            return render(
+                request,
+                "error.html",
+                {
+                    "error_title": "Terlalu Sering Mengecek 🚦",
+                    "error_message": (
+                        f"Tunggu {wait:.1f} detik sebelum melakukan pengecekan lagi."
+                    ),
+                },
+            )
+        # catat waktu pengecekan terakhir di session
+        request.session["last_check_time"] = now
+        # === AKHIR RATE LIMIT ===
+
         form = CheckMessageForm(request.POST)
-        
+
         if form.is_valid():
-            
             # --- VALIDASI 1: LOGIKA HONEYPOT ---
-            if form.cleaned_data.get('verification_email'):
-                return redirect('home') # Bot terdeteksi, abaikan submit
-            
+            if form.cleaned_data.get("verification_email"):
+                return redirect("home")  # Bot terdeteksi, abaikan submit
+
             # --- VALIDASI 2: LOGIKA MATEMATIKA ---
-            expected_answer = request.session.get('math_answer')
-            user_answer = form.cleaned_data.get('math_check')
-            
+            expected_answer = request.session.get("math_answer")
+            user_answer = form.cleaned_data.get("math_check")
+
             if str(user_answer) != str(expected_answer):
-                # Jawaban salah, tambahkan error ke form
-                form.add_error('math_check', 'Jawaban verifikasi salah. Silakan coba lagi.')
-                # Biarkan kode berjalan ke blok 'form invalid' di bawah
-                # untuk me-render ulang halaman dengan pertanyaan baru
-            
+                form.add_error(
+                    "math_check",
+                    "Jawaban verifikasi salah. Silakan coba lagi.",
+                )
             else:
                 # --- SEMUA VALIDASI LOLOS ---
-                
-                # Hapus session setelah berhasil untuk keamanan
-                request.session.pop('math_answer', None) 
-                
+                request.session.pop("math_answer", None)
+
                 message = form.cleaned_data["message"]
                 category = form.cleaned_data.get("category", "")
-                
-                url = extract_url_from_message(message) # Ekstrak URL di sini
+                url = extract_url_from_message(message)
 
                 result = check_url_for_scam(url, message, category)
 
@@ -74,29 +93,24 @@ def check_view(request):
                         risk_score=result.get("risk_score", 0),
                         sender_ip=get_client_ip(request),
                     )
-                
+
                 return render(
                     request,
                     "result.html",
                     {"result": result, "url": url, "category": category},
                 )
-            
-        # --- BLOK INI DIJALANKAN JIKA FORM TIDAK VALID (ATAU MATH CHECK SALAH) ---
-        # Buat pertanyaan matematika baru untuk ditampilkan bersama pesan error
+
+        # --- FORM INVALID / MATH CHECK SALAH ---
         num1 = random.randint(1, 9)
         num2 = random.randint(1, 9)
-        request.session['math_answer'] = num1 + num2
-        
-        context = {
-            "form": form,
-            "num1": num1,
-            "num2": num2
-        }
+        request.session["math_answer"] = num1 + num2
+
+        context = {"form": form, "num1": num1, "num2": num2}
         return render(request, "home.html", context)
-            
+
     else:
         # Jika method GET, redirect ke 'home' yang sudah punya logika matematika
-        return redirect('home')
+        return redirect("home")
 
 
 # checker/views.py - Dasbor Statistik Penipuan Real‑Time
